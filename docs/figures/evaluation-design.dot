@@ -1,0 +1,37 @@
+digraph Evaluation {
+  graph [rankdir=TB, bgcolor="#F7F9FC", pad="0.35", nodesep="0.3", ranksep="0.6", splines=ortho, fontname="Arial", fontsize=26, fontcolor="#152238", labelloc=t, label="BLUEBRIDGE  /  CONTROLLED EVALUATION\nDoes added complexity earn its cost?", dpi=150];
+  node [shape=box, style="rounded,filled", color="#CAD4E1", fillcolor="white", fontname="Arial", fontsize=15, fontcolor="#152238", margin="0.20,0.17", penwidth=1.2];
+  edge [color="#678094", arrowsize=0.75, penwidth=1.5];
+
+  matched [label="MATCHED EXPERIMENT INPUTS\nSame requests, source snapshot, cutoff and model\nComparable context / generation budgets; record actual work", fillcolor="#173B78", color="#173B78", fontcolor="white"];
+  subgraph cluster_arms {
+    label="WORKFLOW ARMS"; fontsize=15; fontcolor="#3155B8"; color="#DCE4EF"; style="rounded"; margin=18;
+    { rank=same;
+      rag [label="Fixed RAG\nRetrieve and answer", fillcolor="#E6F0FF", color="#6E9DDF"];
+      incremental [label="Incremental\nReuse eligible history\nInspect changing claims", fillcolor="#E6F0FF", color="#6E9DDF"];
+      selective [label="Selective review\nIncremental +\nflag-triggered check", fillcolor="#E6F0FF", color="#6E9DDF"];
+      full [label="Full-source refresh\nMap evidence\nReduce into update", fillcolor="#E6F0FF", color="#6E9DDF"];
+    }
+  }
+  records [label="PER-EVENT OUTPUTS + EXECUTION RECORDS\nEach arm inherits its own prior state\nTrack failures, retries, cache reuse and physical calls", fillcolor="#DDF1EF", color="#66AAA5"];
+  subgraph cluster_metrics {
+    label=""; color="#DCE4EF"; style="rounded"; margin=18;
+    metric_header [shape=plaintext, fontsize=15, fontcolor="#3155B8", label="EVALUATION PROTOCOL  /  CALLER-OWNED REFERENCES"];
+    { rank=same;
+      mechanical [label="Mechanical validity\nDates, quotes, citations\nUnits and arithmetic"];
+      semantic [label="Independent semantic review\nEvidence coverage / errors\nUnsupported or missed changes"];
+      cost [label="Measured cost\nCalls, tokens and latency\nShared work counted explicitly"];
+    }
+  }
+  decision [label="COMPARE QUALITY AND COST TOGETHER\nReport trade-offs and uncertainty\nKeep the simpler approach when added work is not justified", fillcolor="#173B78", color="#173B78", fontcolor="white"];
+  modelnote [shape=plaintext, fontsize=13, label="Optional model ablation: base vs prior SFT checkpoint under the same workflow.\nNo checkpoint or training pipeline is included. No competitor superiority is claimed."];
+
+  matched -> rag; matched -> incremental; matched -> selective; matched -> full;
+  rag -> records; incremental -> records; selective -> records; full -> records;
+  rag -> incremental -> selective -> full [style=invis];
+  mechanical -> semantic -> cost [style=invis];
+  records -> metric_header;
+  metric_header -> mechanical; metric_header -> semantic; metric_header -> cost;
+  mechanical -> decision; semantic -> decision; cost -> decision;
+  decision -> modelnote [style=invis];
+}

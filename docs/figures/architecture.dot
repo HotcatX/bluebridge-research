@@ -1,0 +1,30 @@
+digraph Architecture {
+  graph [rankdir=TB, bgcolor="#F7F9FC", pad="0.35", nodesep="0.35", ranksep="0.6", splines=ortho, fontname="Arial", fontsize=26, fontcolor="#152238", labelloc=t, label="BLUEBRIDGE  /  RESEARCH FRAMEWORK\nEvidence-grounded updates with visible uncertainty", dpi=150];
+  node [shape=box, style="rounded,filled", color="#CAD4E1", fillcolor="white", fontname="Arial", fontsize=15, fontcolor="#152238", margin="0.22,0.17", penwidth=1.2];
+  edge [color="#678094", arrowsize=0.75, penwidth=1.5];
+
+  subgraph cluster_inputs {
+    label="01  CALLER-OWNED INPUTS"; labelloc=t; fontsize=15; fontcolor="#3155B8"; color="#DCE4EF"; style="rounded"; margin=18;
+    { rank=same;
+      sources [label="Authorized source chunks\nIDs, text, provenance and metadata"];
+      request [label="Research request + cutoff\nMetric, period, scope and unit"];
+      prior [label="Previous note state\nOwn prior outputs, including errors"];
+    }
+  }
+  retrieve [label="02  EVIDENCE RETRIEVAL\nEligible sources + BM25 + table headers", fillcolor="#E6F0FF", color="#6E9DDF", width=5.1];
+  workflow [label="03  WORKFLOW POLICY\nFixed • Incremental • Selective\nFull-source map/reduce", fillcolor="#E6F0FF", color="#6E9DDF", width=5.1];
+  model [label="04  MODEL INTERFACE\nCaller executes prepared jobs\nStructured proposal + citations", fillcolor="#173B78", color="#173B78", fontcolor="white", width=5.1];
+  providers [label="Provider is configurable\nLocal / hosted / optional watsonx\nNo provider integration is bundled", fillcolor="#F0F3F7", fontsize=13];
+  { rank=same; model; providers; }
+  audit [label="05  MECHANICAL CHECKS\nCitation + quote + date + declared metadata\nGrounded arithmetic and units", fillcolor="#DDF1EF", color="#66AAA5", width=5.1];
+  state [label="06  NEXT STATE + AUDIT RECORD\nFlagged proposals remain unresolved\nMalformed output carries prior state", fillcolor="#DDF1EF", color="#66AAA5", width=5.1];
+  review [label="Independent semantic review\nRequired to assess financial meaning\nand evidence entailment", fillcolor="#FFF1DB", color="#D7B073", fontsize=13];
+  { rank=same; state; review; }
+  boundary [shape=plaintext, fillcolor="#F7F9FC", fontsize=13, label="Mechanical validity is not semantic truth.  |  No datasets, weights or credentials are included."];
+
+  sources -> retrieve; request -> retrieve; prior -> retrieve;
+  retrieve -> workflow -> model -> audit -> state;
+  providers -> model [style=dashed, dir=none, constraint=false];
+  state -> review [style=dashed, constraint=false];
+  state -> boundary [style=invis];
+}

@@ -1,0 +1,33 @@
+digraph Update {
+  graph [rankdir=TB, bgcolor="#F7F9FC", pad="0.35", nodesep="0.4", ranksep="0.55", splines=polyline, fontname="Arial", fontsize=26, fontcolor="#152238", labelloc=t, label="BLUEBRIDGE  /  ONE UPDATE EVENT\nPreserve state, record uncertainty, compare the work", dpi=150];
+  node [shape=box, style="rounded,filled", color="#CAD4E1", fillcolor="white", fontname="Arial", fontsize=15, fontcolor="#152238", margin="0.22,0.17", penwidth=1.2];
+  edge [color="#678094", arrowsize=0.75, penwidth=1.5, fontname="Arial", fontsize=12, fontcolor="#456173"];
+
+  begin [label="New disclosure event + cutoff\nRead the workflow's own previous state", fillcolor="#E6F0FF", color="#6E9DDF"];
+  route [shape=diamond, style=filled, label="Inspect this\nclaim?", fillcolor="#E6F0FF", color="#6E9DDF", margin="0.12,0.09"];
+  cached [label="Reuse cached historical claim\nExplicit fixed-history route only\nRecord skip and state hash"];
+  retrieve [label="Retrieve eligible evidence\nKeep provenance, headers and cost"];
+  proposal [label="Execute prepared model job\nretain / update / insufficient", fillcolor="#173B78", color="#173B78", fontcolor="white"];
+  valid [shape=diamond, style=filled, label="Valid response\nschema?", fillcolor="#E6F0FF", color="#6E9DDF", margin="0.12,0.09"];
+  failed [label="Carry previous state\nMark unresolved\nRecord failed or missing call", fillcolor="#FFF1DB", color="#D7B073"];
+  checks [label="Audit cited evidence and calculations\nRender grounded calculation results", fillcolor="#DDF1EF", color="#66AAA5"];
+  flagged [label="Retain proposed state + audit flags\nFlags or insufficient evidence\nset unresolved = true", fillcolor="#DDF1EF", color="#66AAA5"];
+  selective [label="Optional selective second pass\nTriggered by mechanical flags\nCosts and outcome remain visible", fillcolor="#F0F3F7"];
+  finish [label="Persist state and per-call records\nThe next event inherits this state", fillcolor="#173B78", color="#173B78", fontcolor="white"];
+  note [shape=plaintext, fontsize=13, label="A flagged proposal is not silently replaced by a gold answer.\nThis is a research state-transition policy, not a production approval gate."];
+
+  begin -> route;
+  route -> cached [label="No: explicit cache route"];
+  route -> retrieve [label="Yes"];
+  retrieve -> proposal -> valid;
+  valid -> failed [label="No"];
+  valid -> checks [label="Yes"];
+  checks -> flagged;
+  flagged -> selective [style=dashed, label="Selective workflow only"];
+  flagged -> finish [label="Other workflows"];
+  selective -> finish [label="Audited second-pass result"];
+  cached -> finish; failed -> finish;
+  finish -> note [style=invis];
+  { rank=same; cached; retrieve; }
+  { rank=same; failed; checks; }
+}
