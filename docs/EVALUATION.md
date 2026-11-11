@@ -2,7 +2,7 @@
 
 This is a protocol for future authorized experiments, not an included benchmark or a claim that new experiments have been run for the public release.
 
-![Evaluation design](figures/evaluation-design.svg)
+![Evaluation design](figures/evaluation-design.png)
 
 ## Matched configurations
 

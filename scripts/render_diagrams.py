@@ -9,6 +9,15 @@ import argparse
 import shutil
 import subprocess
 import sys
+import xml.etree.ElementTree as ET
+
+
+def validate_svg_viewport(path):
+    """Reject the high-DPI Graphviz SVG scaling mismatch before publication."""
+    root = ET.parse(path).getroot()
+    graph = root.find('{http://www.w3.org/2000/svg}g')
+    if graph is None or not graph.get('transform', '').startswith('scale(1 1) '):
+        raise ValueError(f'{path.name}: SVG coordinates must use unit scale to avoid clipping')
 
 
 def main():
@@ -21,7 +30,14 @@ def main():
     for source in sorted(directory.glob('*.dot')):
         for fmt in ('svg', 'png'):
             destination = source.with_suffix('.' + fmt)
-            subprocess.run([args.dot, '-T' + fmt, str(source), '-o', str(destination)], check=True)
+            # Graphviz 8 may enlarge the SVG graph without enlarging viewBox
+            # when source dpi=150. SVG is resolution independent; use its
+            # native 72-DPI coordinates and reserve 150 DPI for raster output.
+            dpi = '72' if fmt == 'svg' else '150'
+            subprocess.run([args.dot, '-Gdpi=' + dpi, '-T' + fmt,
+                            str(source), '-o', str(destination)], check=True)
+            if fmt == 'svg':
+                validate_svg_viewport(destination)
             print(f'{destination.relative_to(directory.parent.parent)} ({destination.stat().st_size:,} bytes)')
     return 0
 

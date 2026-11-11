@@ -4,7 +4,7 @@
 
 它是公开展示版，**不是开放授权的开源项目**。未经相应权利人授权，不得用于其他用途。项目相关的部分资源属于 IBM 或其他权利人；这些资源的权利不因本仓库公开而转移。具体见 [使用限制](LICENSE) 和 [权利说明](NOTICE.md)。
 
-![架构](docs/figures/architecture.svg)
+![架构](docs/figures/architecture.png)
 
 ## 这次发布了什么
 

@@ -8,7 +8,7 @@ BlueBridge combines dated evidence retrieval, structured model proposals, determ
 
 [中文说明](README.zh-CN.md) · [Architecture](docs/ARCHITECTURE.md) · [Research background](docs/RESEARCH.md) · [Evaluation protocol](docs/EVALUATION.md)
 
-![Architecture](docs/figures/architecture.svg)
+![Architecture](docs/figures/architecture.png)
 
 ## Research question
 
@@ -63,7 +63,7 @@ state = result["state"]
 
 ## State and checks
 
-![Update flow](docs/figures/update-flow.svg)
+![Update flow](docs/figures/update-flow.png)
 
 The framework preserves the original research behavior:
 
@@ -77,7 +77,7 @@ The framework preserves the original research behavior:
 
 ## Controlled comparisons
 
-![Evaluation design](docs/figures/evaluation-design.svg)
+![Evaluation design](docs/figures/evaluation-design.png)
 
 Compare methods on the same sources, cutoff, initial note, model, and declared budget. Report evidence coverage, unsupported claims, unresolved outputs, calls, tokens, and elapsed model-call time separately. A complete-pass measure should accompany partial credit. Semantic review must be independent of model inputs.
 

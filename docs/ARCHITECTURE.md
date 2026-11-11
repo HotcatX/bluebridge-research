@@ -1,6 +1,6 @@
 # Architecture and integration contract
 
-![Architecture](figures/architecture.svg)
+![Architecture](figures/architecture.png)
 
 ## Caller-owned inputs
 
@@ -31,7 +31,7 @@ A finish proposal declares `tool="finish"`, `disposition` (`retain`, `update`, o
 
 ## State semantics
 
-![Update flow](figures/update-flow.svg)
+![Update flow](figures/update-flow.png)
 
 A valid-schema proposal updates the experimental note state. Mechanical flags mark that state unresolved but do not replace it with a hidden correct answer. Invalid-schema or failed responses carry forward the previous state as unresolved. Prepared work includes a previous-state hash; reducing against a different prior state is rejected.
 
